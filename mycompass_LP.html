@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>マイコンパスワーク | make me Spark</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500&family=Noto+Sans+JP:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink-deep: #D4537E;
+    --pink-mid: #ED93B1;
+    --pink-light: #F4C0D1;
+    --pink-pale: #FBEAF0;
+    --pink-dark: #993556;
+    --pink-darker: #72243E;
+    --pink-darkest: #4B1528;
+    --text: #1a1a1a;
+    --text-sub: #666;
+    --white: #fff;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    color: var(--text);
+    background: #fff;
+    line-height: 1.7;
+  }
+
+  .lp { max-width: 680px; margin: 0 auto; padding: 0 20px 80px; }
+
+  /* ===== GLITTER ===== */
+  @keyframes twinkle {
+    0%,100% { opacity: 0.1; transform: scale(0.7); }
+    50% { opacity: 1; transform: scale(1.5); }
+  }
+  @keyframes sparkle-out {
+    0% { opacity: 1; transform: scale(0) translate(0,0); }
+    70% { opacity: 0.8; }
+    100% { opacity: 0; transform: scale(1.4) translate(var(--tx),var(--ty)); }
+  }
+  .g-dot { position: absolute; border-radius: 50%; animation: twinkle var(--d,2s) ease-in-out infinite var(--dl,0s); }
+  .spark-p { position: fixed; border-radius: 50%; pointer-events: none; animation: sparkle-out 1.3s ease-out forwards; z-index: 9999; }
+
+  /* ===== HERO ===== */
+  .hero {
+    text-align: center;
+    padding: 60px 20px 50px;
+    border-bottom: 1px solid var(--pink-light);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+    background: var(--pink-pale); color: var(--pink-darker);
+    padding: 5px 18px; border-radius: 999px; margin-bottom: 20px;
+    border: 1px solid var(--pink-light);
+  }
+  .hero h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 28px; font-weight: 500; line-height: 1.55;
+    color: var(--text); margin-bottom: 16px;
+  }
+  .hero h1 em {
+    font-style: normal; color: var(--pink-dark);
+    border-bottom: 2px solid var(--pink-mid);
+  }
+  .hero-sub {
+    font-size: 15px; color: var(--text-sub);
+    line-height: 1.9; max-width: 460px; margin: 0 auto 32px;
+  }
+  .btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--pink-deep), var(--pink-mid));
+    color: #fff; font-size: 15px; font-weight: 500;
+    padding: 15px 42px; border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(212,83,126,0.3);
+    transition: opacity 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+  }
+  .btn:hover { opacity: 0.88; box-shadow: 0 6px 28px rgba(212,83,126,0.4); }
+  .btn-note { display: block; font-size: 12px; color: var(--text-sub); margin-top: 12px; }
+
+  /* ===== SECTIONS ===== */
+  .sec { padding: 48px 0; border-bottom: 1px solid var(--pink-light); }
+  .sec-label {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+    color: var(--pink-deep); text-transform: uppercase; margin-bottom: 6px;
+  }
+  .sec h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px; font-weight: 500; line-height: 1.5;
+    color: var(--text); margin-bottom: 20px;
+  }
+  .sec p { font-size: 15px; color: var(--text-sub); line-height: 1.85; }
+
+  /* ===== こんな方へ ===== */
+  .target-list { list-style: none; margin-top: 16px; }
+  .target-list li {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 12px 0; border-bottom: 1px solid var(--pink-light);
+    font-size: 14px; color: var(--text); line-height: 1.65;
+  }
+  .target-list li:last-child { border-bottom: none; }
+  .chk { color: var(--pink-deep); font-size: 13px; flex-shrink: 0; padding-top: 2px; }
+
+  /* ===== 矢印ブリッジ ===== */
+  .bridge {
+    text-align: center; padding: 28px 0 16px;
+    font-size: 13px; color: var(--text-sub);
+  }
+  .arrow-down {
+    width: 0; height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 13px solid var(--pink-mid);
+    margin: 10px auto 0;
+  }
+
+  /* ===== 得られることカード ===== */
+  .result-cards { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+  .result-card {
+    display: flex; gap: 16px; align-items: flex-start;
+    background: var(--pink-pale); border: 1px solid var(--pink-light);
+    border-radius: var(--radius); padding: 18px 20px;
+  }
+  .r-icon {
+    flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink-light), var(--pink-mid));
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
+  }
+  .r-body h3 { font-size: 14px; font-weight: 500; color: var(--pink-darker); margin-bottom: 5px; line-height: 1.5; }
+  .r-body p { font-size: 13px; color: var(--pink-dark); line-height: 1.75; }
+  .closing {
+    margin-top: 20px; background: #fff;
+    border: 1px solid var(--pink-light); border-radius: var(--radius);
+    padding: 18px 22px; font-size: 14px; color: var(--text);
+    line-height: 1.9; text-align: center;
+  }
+  .closing em { font-style: normal; color: var(--pink-dark); font-weight: 500; }
+
+  /* ===== コンセプト ===== */
+  .concept-quote {
+    background: var(--pink-pale); border-left: 3px solid var(--pink-deep);
+    padding: 18px 20px; margin: 20px 0;
+    font-size: 15px; color: var(--pink-darkest); line-height: 1.9;
+  }
+  .concept-quote strong { color: var(--pink-dark); }
+
+  /* ===== 比較表 ===== */
+  .tbl-wrap { border: 1px solid var(--pink-light); border-radius: var(--radius); overflow: hidden; margin-top: 20px; }
+  .cmp-table { width: 100%; border-collapse: collapse; }
+  .cmp-table thead th { padding: 14px 14px; font-size: 13px; font-weight: 500; text-align: center; border-bottom: 1px solid #eee; }
+  .th-blank { background: #f9f9f9; border-right: 1px solid #eee; width: 28%; }
+  .th-coach { background: #f9f9f9; color: var(--text-sub); border-right: 1px solid #eee; font-size: 12px; }
+  .th-mycomp { background: linear-gradient(135deg, var(--pink-light), var(--pink-mid)); color: var(--pink-darkest); font-size: 12px; }
+  .cmp-table td { padding: 13px 14px; font-size: 13px; line-height: 1.75; vertical-align: top; border-bottom: 1px solid #f0e0e6; }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .td-label { font-size: 11px; font-weight: 500; color: var(--text-sub); background: #f9f9f9; border-right: 1px solid #eee; white-space: nowrap; }
+  .td-coach { color: var(--text-sub); background: #fff; border-right: 1px solid #f0e0e6; }
+  .td-mycomp { color: var(--text); background: var(--pink-pale); }
+  .td-mycomp .hi { color: var(--pink-dark); font-weight: 500; }
+  .price-big { font-size: 19px; font-weight: 500; color: var(--pink-darker); line-height: 1.2; }
+  .price-co { font-size: 17px; font-weight: 500; color: var(--text-sub); line-height: 1.2; }
+  .price-note { font-size: 11px; color: var(--text-sub); margin-top: 3px; }
+
+  .merit-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; }
+  .merit-card { background: var(--pink-pale); border: 1px solid var(--pink-light); border-radius: var(--radius-sm); padding: 16px 12px; text-align: center; }
+  .merit-icon { font-size: 20px; margin-bottom: 8px; }
+  .merit-title { font-size: 13px; font-weight: 500; color: var(--pink-darker); margin-bottom: 5px; line-height: 1.4; }
+  .merit-body { font-size: 12px; color: var(--pink-dark); line-height: 1.6; }
+  .summary-box { background: var(--pink-pale); border-left: 3px solid var(--pink-deep); padding: 16px 20px; margin-top: 20px; font-size: 14px; color: var(--pink-darkest); line-height: 1.9; }
+  .summary-box .hi { color: var(--pink-dark); font-weight: 500; }
+
+  /* ===== ワーク内容 ===== */
+  .work-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .tab-btn {
+    font-size: 12px; padding: 7px 16px; border-radius: 999px;
+    border: 1px solid var(--pink-light); background: #fff;
+    color: var(--text-sub); cursor: pointer; transition: all 0.15s;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .tab-btn.active { background: var(--pink-deep); color: #fff; border-color: var(--pink-deep); }
+  .work-content { display: none; }
+  .work-content.show { display: block; animation: fadein 0.25s ease; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .work-list { list-style: none; }
+  .work-list li {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 11px 0; border-bottom: 1px solid var(--pink-light);
+    font-size: 14px; color: var(--text); line-height: 1.6;
+  }
+  .work-list li:last-child { border-bottom: none; }
+  .wnum {
+    flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink-light), var(--pink-mid));
+    color: var(--pink-darkest); font-size: 11px; font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .work-bonus {
+    background: var(--pink-pale); border: 1px solid var(--pink-light);
+    border-radius: var(--radius-sm); padding: 11px 16px;
+    margin-top: 12px; font-size: 13px; color: var(--pink-darker);
+  }
+
+  /* ===== フロー ===== */
+  .flow-steps { margin-top: 20px; }
+  .flow-step { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 20px; }
+  .f-num {
+    flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink-light), var(--pink-mid));
+    color: var(--pink-darkest); font-size: 13px; font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .f-body h3 { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+  .f-body p { font-size: 13px; color: var(--text-sub); line-height: 1.75; }
+
+  /* ===== 料金 ===== */
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+  .d-card { background: #fff; border: 1px solid var(--pink-light); border-radius: var(--radius); padding: 16px; }
+  .d-label { font-size: 11px; color: var(--pink-deep); margin-bottom: 5px; }
+  .d-val { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.5; }
+  .price-box {
+    background: var(--pink-pale); border: 1px solid var(--pink-light);
+    border-radius: var(--radius); padding: 28px 20px; margin-top: 16px; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .price-box::before {
+    content: ''; position: absolute; top: -28px; right: -28px;
+    width: 90px; height: 90px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(237,147,177,0.25), transparent 70%);
+  }
+  .p-note { font-size: 13px; color: var(--pink-dark); margin-bottom: 8px; }
+  .p-main { font-size: 36px; font-weight: 500; color: var(--pink-darker); font-family: 'Noto Serif JP', serif; }
+  .p-unit { font-size: 16px; color: var(--pink-dark); margin-left: 4px; }
+  .p-period { font-size: 13px; color: var(--text-sub); margin-top: 4px; }
+  .p-sub { font-size: 12px; color: var(--text-sub); margin-top: 10px; line-height: 1.7; }
+
+  /* ===== 声 ===== */
+  .voices { margin-top: 20px; display: flex; flex-direction: column; gap: 14px; }
+  .voice {
+    background: #fff; border: 1px solid var(--pink-light);
+    border-radius: var(--radius); padding: 18px 20px; position: relative;
+  }
+  .voice::before {
+    content: '"'; position: absolute; top: 8px; left: 14px;
+    font-size: 50px; color: var(--pink-light); line-height: 1;
+    font-family: Georgia, serif;
+  }
+  .v-body { font-size: 14px; color: var(--text); line-height: 1.8; margin-bottom: 10px; padding-top: 14px; }
+  .v-name { font-size: 12px; color: var(--text-sub); }
+
+  /* ===== CTA ===== */
+  .cta-sec { padding: 56px 0 0; text-align: center; }
+  .cta-sec h2 { font-family: 'Noto Serif JP', serif; font-size: 22px; font-weight: 500; color: var(--text); margin-bottom: 10px; }
+  .cta-sec p { font-size: 14px; color: var(--text-sub); margin-bottom: 28px; line-height: 1.85; }
+  .footer-note { font-size: 12px; color: var(--text-sub); margin-top: 28px; line-height: 1.8; }
+
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 22px; }
+    .merit-cards { grid-template-columns: 1fr 1fr; }
+    .detail-grid { grid-template-columns: 1fr; }
+    .cmp-table { font-size: 12px; }
+    .cmp-table td, .cmp-table th { padding: 10px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="lp">
+
+  <!-- HERO -->
+  <div class="hero" id="hero">
+    <div id="glitter" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;"></div>
+    <div class="hero-eyebrow">✦ make me Spark ✦</div>
+    <h1>次に進む人のための<br><em>マイコンパスワーク</em></h1>
+    <p class="hero-sub">「これでいいのかな？」が「私はこれを選ぶ！」に変わる。<br>お金・時間・人間関係……あらゆる選択に迷わなくなる<br>自己理解のセッションです。</p>
+    <a href="https://forms.gle/rvHmMYTd5Lm8SHAN7" class="btn js-btn">申し込みフォームへ進む ✦</a>
+    <span class="btn-note">※ まずはお気軽にご登録ください</span>
+  </div>
+
+  <!-- こんな方へ -->
+  <div class="sec">
+    <div class="sec-label">✦ こんな方へ</div>
+    <h2>「自分のこと、ちゃんとわかってる」<br>と言えますか？</h2>
+    <ul class="target-list">
+      <li><span class="chk">✦</span>何かを選ぶたびに迷って、疲れてしまう</li>
+      <li><span class="chk">✦</span>頭の中で考えがぐるぐるして整理できない</li>
+      <li><span class="chk">✦</span>一人で考えようとしても、いつも後回しになる</li>
+      <li><span class="chk">✦</span>自分の判断基準が曖昧で、行動できない</li>
+      <li><span class="chk">✦</span>次に進みたいのに、何からすればいいかわからない</li>
+    </ul>
+  </div>
+
+  <!-- このワークで得られること -->
+  <div class="sec">
+    <div class="bridge">そのモヤモヤ、このワークで変わります<div class="arrow-down"></div></div>
+    <div class="sec-label">✦ このワークで得られること</div>
+    <h2>自分の「大切なもの」が見えると<br>人生の選択が変わる</h2>
+    <div class="result-cards">
+      <div class="result-card">
+        <div class="r-icon">🧭</div>
+        <div class="r-body">
+          <h3>自分だけの判断基準ができる</h3>
+          <p>お金・時間・人間関係……どんな場面でも「私はこれを選ぶ」と迷わず決められるようになります。</p>
+        </div>
+      </div>
+      <div class="result-card">
+        <div class="r-icon">📌</div>
+        <div class="r-body">
+          <h3>未来日記や未来へのピン打ちの「指針」になる</h3>
+          <p>自分が本当に大切にしていることが言葉になるから、未来のビジョンを描くとき・目標を設定するときの軸として使えます。「なんとなく書いた未来日記」が「自分らしい未来日記」に変わります。</p>
+        </div>
+      </div>
+      <div class="result-card">
+        <div class="r-icon">💬</div>
+        <div class="r-body">
+          <h3>頭の中が整理されて、行動しやすくなる</h3>
+          <p>「考えてはいるけど進まない」状態から抜け出せます。話して言葉にするだけで、モヤモヤが輪郭を持ちはじめます。</p>
+        </div>
+      </div>
+      <div class="result-card">
+        <div class="r-icon">🌸</div>
+        <div class="r-body">
+          <h3>「これでいいのかな」が「これでいい」に変わる</h3>
+          <p>正解を与えてもらうのではなく、自分の中にある答えに気づく体験。それが積み重なって、自分への信頼につながります。</p>
+        </div>
+      </div>
+    </div>
+    <div class="closing">自分の大切なものが見えると、<br><em>未来への地図が、ぐっとリアルになります。</em></div>
+  </div>
+
+  <!-- マイコンパスワークとは -->
+  <div class="sec">
+    <div class="sec-label">✦ マイコンパスワークとは</div>
+    <h2>答えを教えるのではなく<br>「自分の基準」を一緒に見つける</h2>
+    <div class="concept-quote">
+      このワークは、<strong>自分にとっての判断基準を整え、選ぶたびに迷わなくなる</strong>ためのセッションです。<br><br>
+      ガイドは答えを与えません。<br>
+      話して整理し、言葉にして気づき、自分の基準を見つける——<br>
+      そのプロセスを、安全に、途中で投げ出さずに進められるよう支える存在です。
+    </div>
+  </div>
+
+  <!-- コーチングとの違い -->
+  <div class="sec">
+    <div class="sec-label">✦ コーチングとの違い</div>
+    <h2>同じ「伴走型サポート」でも<br>これだけ違います</h2>
+    <p>コーチングと比べて、マイコンパスワークがお客様にとってどんなメリットがあるかを正直にお伝えします。</p>
+    <div class="tbl-wrap">
+      <table class="cmp-table">
+        <thead>
+          <tr>
+            <th class="th-blank"></th>
+            <th class="th-coach">一般的なコーチング</th>
+            <th class="th-mycomp">✦ マイコンパスワーク</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-label">料金の目安</td>
+            <td class="td-coach"><div class="price-co">月3〜10万円</div><div class="price-note">（月2〜4回 × 1.5〜3万/回）</div></td>
+            <td class="td-mycomp"><div class="price-big">約3.9万円</div><div class="price-note">全6回・約3ヶ月セッションがこの金額で</div></td>
+          </tr>
+          <tr>
+            <td class="td-label">1回あたり</td>
+            <td class="td-coach"><div class="price-co">約1.5〜3万円/回</div></td>
+            <td class="td-mycomp"><div class="price-big">約6,600円/回</div><div class="price-note">全6回込みの一括料金</div></td>
+          </tr>
+          <tr>
+            <td class="td-label">サポート期間</td>
+            <td class="td-coach">月単位で契約更新<br><small>（終わり時期が見えにくい）</small></td>
+            <td class="td-mycomp"><span class="hi">約3ヶ月・全6回で完結</span><br><small>（終わりが見えるから続けやすい）</small></td>
+          </tr>
+          <tr>
+            <td class="td-label">関わり方</td>
+            <td class="td-coach">質問を投げかけ<br>答えを引き出す</td>
+            <td class="td-mycomp"><span class="hi">壁打ち相手として一緒にワークを進める</span></td>
+          </tr>
+          <tr>
+            <td class="td-label">受ける側の<br>スキル</td>
+            <td class="td-coach">「うまく話せるか」<br>不安になりやすい</td>
+            <td class="td-mycomp"><span class="hi">ワークシートに沿うだけ</span><br><small>（うまく話せなくても大丈夫）</small></td>
+          </tr>
+          <tr>
+            <td class="td-label">深掘り</td>
+            <td class="td-coach">より深い答えを<br>引き出そうとする</td>
+            <td class="td-mycomp"><span class="hi">深掘りしない</span><br><small>「今の地点」をそのまま尊重</small></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="merit-cards">
+      <div class="merit-card"><div class="merit-icon">💰</div><div class="merit-title">3ヶ月セッションが<br>この金額で</div><div class="merit-body">全6回まとめて受けられるから、継続しやすい</div></div>
+      <div class="merit-card"><div class="merit-icon">🗓</div><div class="merit-title">終わりが<br>見えるから安心</div><div class="merit-body">全6回・3ヶ月で完結。ずるずる続かない</div></div>
+      <div class="merit-card"><div class="merit-icon">📋</div><div class="merit-title">うまく話せなくても大丈夫</div><div class="merit-body">ワークシートが道案内してくれる</div></div>
+    </div>
+    <div class="summary-box">コーチングは月3〜10万円かかることも多く、「うまく話せるか」「合うコーチを選べるか」という不安がつきもの。<br><br>マイコンパスワークは、<span class="hi">約3.9万円で3ヶ月・全6回</span>が完結。ワークシートがあるから話すのが苦手でも大丈夫。<span class="hi">答えを教えてもらうのではなく、自分の中にある答えを見つける</span>——それが最大の違いです。</div>
+  </div>
+
+  <!-- ワーク内容 -->
+  <div class="sec">
+    <div class="sec-label">✦ ワーク内容</div>
+    <h2>あなたの状態に合わせた<br>全12ワークから選択</h2>
+    <div class="work-tabs">
+      <button class="tab-btn active" onclick="showWork('v1',this)">ver.1（基本）</button>
+      <button class="tab-btn" onclick="showWork('v2',this)">ver.2（応用）</button>
+      <button class="tab-btn" onclick="showWork('add',this)">追加ワーク</button>
+    </div>
+    <div class="work-content show" id="w-v1">
+      <ul class="work-list">
+        <li><span class="wnum">1</span>現在地発見ワーク</li>
+        <li><span class="wnum">2</span>未来ピン打ちワーク</li>
+        <li><span class="wnum">3</span>マイコンパスワーク vol.1</li>
+        <li><span class="wnum">4</span>マネーコンパスワーク（お金編）</li>
+        <li><span class="wnum">5</span>タイムコンパスワーク（時間編）</li>
+        <li><span class="wnum">6</span>振り返りワーク</li>
+      </ul>
+    </div>
+    <div class="work-content" id="w-v2">
+      <ul class="work-list">
+        <li><span class="wnum">1</span>現在地発見ワーク</li>
+        <li><span class="wnum">2</span>未来ピン打ちワーク</li>
+        <li><span class="wnum">3</span>マイコンパスワーク vol.2</li>
+        <li><span class="wnum">4</span>しっくりセンサーワーク</li>
+        <li><span class="wnum">5</span>マイコンパスワーク vol.3</li>
+        <li><span class="wnum">6</span>振り返りワーク</li>
+      </ul>
+    </div>
+    <div class="work-content" id="w-add">
+      <div class="work-bonus">✦ ver.1＋ver.2 同時契約の方限定で解放される追加ワーク</div>
+      <ul class="work-list">
+        <li><span class="wnum">+</span>人間関係のマイコンパスワーク</li>
+        <li><span class="wnum">+</span>変化・成長のマイコンパスワーク</li>
+        <li><span class="wnum">+</span>仕事・ビジネスのマイコンパスワーク</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- セッションの流れ -->
+  <div class="sec">
+    <div class="sec-label">✦ セッションの流れ</div>
+    <h2>安心できる対話の中で<br>自分の本音を掘り下げていく</h2>
+    <div class="flow-steps">
+      <div class="flow-step"><div class="f-num">1</div><div class="f-body"><h3>事前アンケート＆ウォーミングアップ</h3><p>入金確認後に専用シートとウォーミングアップワークをお渡しします。</p></div></div>
+      <div class="flow-step"><div class="f-num">2</div><div class="f-body"><h3>初回セッション（現在地 × 未来ゴール設定）</h3><p>今の状態を整理し、3〜4ヶ月先のゴールを言葉にします。</p></div></div>
+      <div class="flow-step"><div class="f-num">3</div><div class="f-body"><h3>継続セッション（各60分 × 4回）</h3><p>あなたに合った3つのワークを対話形式で進めます。</p></div></div>
+      <div class="flow-step"><div class="f-num">4</div><div class="f-body"><h3>最終セッション（振り返り）</h3><p>3ヶ月の変化を振り返り、次のステージへの道筋を確認します。</p></div></div>
+    </div>
+  </div>
+
+  <!-- 料金・詳細 -->
+  <div class="sec">
+    <div class="sec-label">✦ 料金・詳細</div>
+    <h2>まずは1クールから</h2>
+    <div class="detail-grid">
+      <div class="d-card"><div class="d-label">回数</div><div class="d-val">全6回のセッション</div></div>
+      <div class="d-card"><div class="d-label">期間</div><div class="d-val">推奨3ヶ月（最短2ヶ月〜）</div></div>
+      <div class="d-card"><div class="d-label">形式</div><div class="d-val">Zoom / 対面</div></div>
+      <div class="d-card"><div class="d-label">担当</div><div class="d-val">アンナ（認定ガイド）</div></div>
+    </div>
+    <div class="price-box">
+      <div class="p-note">✦ スタート料金</div>
+      <div class="p-main">¥39,800<span class="p-unit">/ 1クール</span></div>
+      <div class="p-period">（全6回・約3ヶ月）</div>
+      <div class="p-sub">※ ver.1＋ver.2 同時契約で追加ワーク3本が解放されます<br>※ 継続実績に応じて料金が段階的に上がります（先着5名が最安値）</div>
+    </div>
+  </div>
+
+  <!-- お客様の声 -->
+  <div class="sec">
+    <div class="sec-label">✦ 受けた方の声</div>
+    <h2>「自分のことが<br>やっとわかった気がする」</h2>
+    <div class="voices">
+      <div class="voice"><div class="v-body">ずっとモヤモヤしていたことが、セッションを通して言葉になりました。誰かに話を聞いてもらうだけでこんなに変わるんだって驚いています。</div><div class="v-name">30代 女性</div></div>
+      <div class="voice"><div class="v-body">頭の中でぐるぐるしていた考えが、話しながら整理されていく感覚が不思議でした。自分の判断基準がわかってから、日々の選択に迷いが減りました。</div><div class="v-name">40代 女性</div></div>
+      <div class="voice"><div class="v-body">アドバイスをもらうわけじゃないのに、気づいたら自分で答えを出していました。「次に進む」ための地図が手に入った感じです。</div><div class="v-name">30代 女性</div></div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-sec">
+    <h2>✦ まず一歩、自分と向き合う時間を ✦</h2>
+    <p>申し込みフォームからご登録いただいた後、<br>詳細のご案内をお送りします。<br><small>※ 医療・心理カウンセリングではありません。成果を保証するものではありません。</small></p>
+    <a href="https://forms.gle/rvHmMYTd5Lm8SHAN7" class="btn js-btn">申し込みフォームへ進む ✦</a>
+    <p class="footer-note">ご不明な点はお気軽にお問い合わせください。<br>make me Spark 認定ガイド｜アンナ</p>
+  </div>
+
+</div>
+
+<script>
+// キラキラ生成
+const pinks = ['#ED93B1','#F4C0D1','#D4537E','#FBEAF0','#fff','#f9c8de'];
+const g = document.getElementById('glitter');
+for (let i = 0; i < 32; i++) {
+  const d = document.createElement('div');
+  d.className = 'g-dot';
+  const sz = 3 + Math.random()*5;
+  d.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;background:${pinks[i%pinks.length]};--d:${(1.6+Math.random()*2.2).toFixed(2)}s;--dl:${(Math.random()*3).toFixed(2)}s`;
+  g.appendChild(d);
+}
+
+// ボタンキラキラエフェクト
+document.querySelectorAll('.js-btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    for (let i = 0; i < 16; i++) {
+      const s = document.createElement('div');
+      s.className = 'spark-p';
+      const sz = 4 + Math.random()*6;
+      const a = Math.random()*Math.PI*2;
+      const dist = 50 + Math.random()*70;
+      s.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;width:${sz}px;height:${sz}px;background:${pinks[Math.floor(Math.random()*pinks.length)]};--tx:${Math.cos(a)*dist}px;--ty:${Math.sin(a)*dist}px`;
+      document.body.appendChild(s);
+      setTimeout(()=>s.remove(), 1300);
+    }
+  });
+});
+
+// ワーク内容タブ
+function showWork(id, el) {
+  document.querySelectorAll('.work-content').forEach(c => c.classList.remove('show'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('w-'+id).classList.add('show');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>
