@@ -28,7 +28,7 @@ img,svg{max-width:100%}
 .g-dot{position:absolute;border-radius:50%;opacity:.5;
   background:radial-gradient(circle,rgba(255,255,255,.95) 0%,var(--rose-soft) 60%,transparent 100%);
   animation:twinkle var(--d,5s) ease-in-out infinite var(--dl,0s)}
-@keyframes twinkle{0%,100%{opacity:.12;transform:scale(.7)}50%{opacity:.7;transform:scale(1.15)}}
+@keyframes twinkle{0%,100%{opacity:.18;transform:scale(.7)}50%{opacity:.9;transform:scale(1.2)}}
 @media(prefers-reduced-motion:reduce){.g-dot{animation:none;opacity:.3}}
 
 /* ---------- header ---------- */
@@ -84,8 +84,8 @@ section{padding-top:66px;scroll-margin-top:74px}
   background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C96F89' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 6'/%3E%3C/svg%3E")}
 
 /* ---------- before / after ---------- */
-.ba{background:var(--white);border:1px solid var(--rose-line);border-radius:var(--radius);overflow:hidden;box-shadow:0 6px 20px rgba(201,111,137,.09)}
-.ba-col{padding:24px 22px}
+.ba{display:grid;grid-template-columns:1fr 44px 1fr;align-items:stretch;background:var(--white);border:1px solid var(--rose-line);border-radius:var(--radius);overflow:hidden;box-shadow:0 6px 20px rgba(201,111,137,.09)}
+.ba-col{padding:22px 18px}
 .ba-col.before{background:#F7F3F5}
 .ba-col.before .ba-h{color:var(--text-mute)}
 .ba-col.after{background:var(--pink-pale)}
@@ -95,7 +95,7 @@ section{padding-top:66px;scroll-margin-top:74px}
 .ba-list li{font-size:14px;padding-left:20px;position:relative;color:var(--text)}
 .ba-col.before .ba-list li::before{content:"…";position:absolute;left:2px;color:var(--text-mute)}
 .ba-col.after .ba-list li::before{content:"✦";position:absolute;left:0;color:var(--rose-soft);font-size:11px;top:3px}
-.ba-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px;background:linear-gradient(180deg,#F7F3F5,var(--pink-pale))}
+.ba-mid{display:flex;align-items:center;justify-content:center;padding:8px;background:linear-gradient(90deg,#F7F3F5,var(--pink-pale))}
 .ba-mid .name{font-family:"Noto Serif JP",serif;font-size:15px;font-weight:600;color:var(--rose)}
 .ba-mid svg{width:26px;height:26px;color:var(--rose-mid)}
 
@@ -213,9 +213,25 @@ footer{text-align:center;font-size:11px;color:var(--text-mute);margin-top:40px;l
   .hero-copy{font-size:18px}
   .sec-title{font-size:20px}
 }
+.page-glitter{position:fixed;z-index:-1}
+@media(max-width:560px){.ba{grid-template-columns:1fr}.ba-mid{background:linear-gradient(180deg,#F7F3F5,var(--pink-pale));padding:6px 0}.ba-mid svg{transform:rotate(90deg)}}
 </style>
 </head>
 <body>
+
+<!-- ページ全体の控えめキラキラ -->
+<div class="glitter page-glitter" aria-hidden="true">
+  <span class="g-dot" style="width:6px;height:6px;top:6%;left:8%;--d:6s"></span>
+  <span class="g-dot" style="width:4px;height:4px;top:12%;right:10%;--d:5.5s;--dl:1.5s"></span>
+  <span class="g-dot" style="width:5px;height:5px;top:24%;left:14%;--d:6.5s;--dl:.8s"></span>
+  <span class="g-dot" style="width:4px;height:4px;top:33%;right:16%;--d:5s;--dl:2s"></span>
+  <span class="g-dot" style="width:6px;height:6px;top:45%;left:6%;--d:7s;--dl:1.2s"></span>
+  <span class="g-dot" style="width:4px;height:4px;top:52%;right:8%;--d:5.5s;--dl:.5s"></span>
+  <span class="g-dot" style="width:5px;height:5px;top:63%;left:12%;--d:6s;--dl:1.8s"></span>
+  <span class="g-dot" style="width:4px;height:4px;top:72%;right:14%;--d:6.5s;--dl:1s"></span>
+  <span class="g-dot" style="width:6px;height:6px;top:82%;left:10%;--d:5s;--dl:2.2s"></span>
+  <span class="g-dot" style="width:4px;height:4px;top:90%;right:12%;--d:6s;--dl:.6s"></span>
+</div>
 
 <!-- ========== ヘッダー ========== -->
 <header class="hdr">
@@ -228,11 +244,18 @@ footer{text-align:center;font-size:11px;color:var(--text-mute);margin-top:40px;l
 <!-- ========== ヒーロー ========== -->
 <header class="hero">
   <div class="glitter">
-    <span class="g-dot" style="width:8px;height:8px;top:12%;left:10%;--d:5.5s"></span>
-    <span class="g-dot" style="width:6px;height:6px;top:26%;right:12%;--d:6.5s;--dl:1s"></span>
-    <span class="g-dot" style="width:5px;height:5px;top:48%;left:16%;--d:5s;--dl:2s"></span>
-    <span class="g-dot" style="width:7px;height:7px;bottom:20%;right:18%;--d:7s;--dl:.6s"></span>
-    <span class="g-dot" style="width:4px;height:4px;bottom:30%;left:24%;--d:6s;--dl:1.6s"></span>
+    <span class="g-dot" style="width:8px;height:8px;top:8%;left:8%;--d:5.5s"></span>
+    <span class="g-dot" style="width:5px;height:5px;top:14%;left:30%;--d:6s;--dl:1.4s"></span>
+    <span class="g-dot" style="width:6px;height:6px;top:10%;right:14%;--d:6.5s;--dl:1s"></span>
+    <span class="g-dot" style="width:4px;height:4px;top:22%;right:32%;--d:5s;--dl:.4s"></span>
+    <span class="g-dot" style="width:7px;height:7px;top:30%;left:12%;--d:7s;--dl:2.2s"></span>
+    <span class="g-dot" style="width:5px;height:5px;top:40%;right:10%;--d:5.5s;--dl:.8s"></span>
+    <span class="g-dot" style="width:4px;height:4px;top:52%;left:22%;--d:6s;--dl:2s"></span>
+    <span class="g-dot" style="width:6px;height:6px;top:58%;right:24%;--d:6.5s;--dl:1.2s"></span>
+    <span class="g-dot" style="width:5px;height:5px;bottom:22%;left:14%;--d:5s;--dl:.6s"></span>
+    <span class="g-dot" style="width:7px;height:7px;bottom:16%;right:16%;--d:7s;--dl:1.8s"></span>
+    <span class="g-dot" style="width:4px;height:4px;bottom:28%;left:36%;--d:6s;--dl:1s"></span>
+    <span class="g-dot" style="width:5px;height:5px;bottom:10%;right:34%;--d:5.5s;--dl:2.4s"></span>
   </div>
   <div class="hero-inner">
     <span class="hero-eyebrow">✦ make me Spark ✦</span>
@@ -279,8 +302,7 @@ footer{text-align:center;font-size:11px;color:var(--text-mute);margin-top:40px;l
         </ul>
       </div>
       <div class="ba-mid">
-        <span class="name">マイコンパスワーク</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </div>
       <div class="ba-col after">
         <div class="ba-h">AFTER</div>
@@ -293,6 +315,7 @@ footer{text-align:center;font-size:11px;color:var(--text-mute);margin-top:40px;l
         </ul>
       </div>
     </div>
+    <p class="wt-note">🧭 マイコンパスワークを通して、あなたの「選ぶ力」が育ちます。</p>
   </section>
 
   <!-- ========== 3. マイコンパスワークとは ========== -->
@@ -459,9 +482,13 @@ footer{text-align:center;font-size:11px;color:var(--text-mute);margin-top:40px;l
   <!-- ========== 11. 最後のCTA ========== -->
   <div class="final">
     <div class="glitter">
-      <span class="g-dot" style="width:7px;height:7px;top:16%;left:14%;--d:6s"></span>
-      <span class="g-dot" style="width:5px;height:5px;top:30%;right:16%;--d:5.5s;--dl:1.2s"></span>
-      <span class="g-dot" style="width:6px;height:6px;bottom:22%;right:22%;--d:6.5s;--dl:.5s"></span>
+      <span class="g-dot" style="width:7px;height:7px;top:14%;left:12%;--d:6s"></span>
+      <span class="g-dot" style="width:5px;height:5px;top:22%;right:14%;--d:5.5s;--dl:1.2s"></span>
+      <span class="g-dot" style="width:4px;height:4px;top:40%;left:20%;--d:5s;--dl:.6s"></span>
+      <span class="g-dot" style="width:6px;height:6px;top:36%;right:26%;--d:6.5s;--dl:2s"></span>
+      <span class="g-dot" style="width:5px;height:5px;bottom:20%;left:26%;--d:6s;--dl:1s"></span>
+      <span class="g-dot" style="width:7px;height:7px;bottom:16%;right:18%;--d:6.5s;--dl:.4s"></span>
+      <span class="g-dot" style="width:4px;height:4px;bottom:30%;right:38%;--d:5.5s;--dl:1.6s"></span>
     </div>
     <div class="final-inner">
       <h2>「これでいいのかな？」を卒業して、<br><span class="em">「私はこれを選ぶ！」</span>と言える私へ。</h2>
