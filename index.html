@@ -181,6 +181,16 @@ table.cmp tr:last-child th,table.cmp tr:last-child td{border-bottom:none}
 .price-2nd{margin-top:18px;font-size:12.5px;color:var(--text-mute);line-height:1.8}
 .price .cta-btn{margin-top:24px}
 @media(max-width:480px){.price .yen{font-size:38px}.price-merit{grid-template-columns:1fr}}
+.courses{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 6px;text-align:left}
+.course{background:var(--white);border:1.5px solid var(--rose-line);border-radius:var(--radius-sm);padding:22px 20px 20px;position:relative}
+.course.best{border:2px solid var(--rose-soft);background:linear-gradient(160deg,var(--pink-pale),#fff);box-shadow:0 6px 18px rgba(201,111,137,.14)}
+.course .cname{font-family:"Noto Serif JP",serif;font-size:16px;font-weight:600;color:var(--rose)}
+.course .cyen{font-family:"Noto Serif JP",serif;font-size:29px;font-weight:700;color:var(--rose);line-height:1.15;margin:6px 0 4px}
+.course .cyen small{font-size:13px;font-weight:600}
+.course .cmeta{font-size:12.5px;color:var(--text-sub);line-height:1.75}
+.course .cbadge{position:absolute;top:-11px;right:14px;font-size:10px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--rose),var(--rose-mid));padding:4px 12px;border-radius:999px;letter-spacing:.04em;box-shadow:0 3px 8px rgba(201,111,137,.3)}
+.course .cnote{font-size:11.5px;color:var(--text-mute);margin-top:10px;line-height:1.7;border-top:1px solid var(--rose-line);padding-top:9px}
+@media(max-width:480px){.courses{grid-template-columns:1fr}}
 
 /* ---------- final CTA ---------- */
 .final{position:relative;overflow:hidden;margin-top:70px;text-align:center;
@@ -441,15 +451,31 @@ footer{text-align:center;font-size:11px;color:var(--text-mute);margin-top:40px;l
     <span class="sec-label">PRICE</span>
     <h2 class="sec-title">料金</h2>
     <div class="price">
-      <div class="big">スタート料金（1クール）</div>
-      <div class="yen">¥39,800<small> / 1クール</small></div>
-      <div class="sub">全6回・約3ヶ月　｜　約6,600円/回</div>
-      <div class="facts"><span>📅 全6回・各60分</span><span>⏱ 約3ヶ月</span><span>💻 Zoom / 対面</span></div>
+      <div class="big">スタート料金（先着5名さま限定）</div>
+      <p class="sub" style="margin-bottom:20px">2つのコースからお選びいただけます。じっくり取り組みたい方は「6ヶ月コース」が断然お得です。</p>
+
+      <div class="courses">
+        <div class="course">
+          <div class="cname">3ヶ月コース（1クール）</div>
+          <div class="cyen">¥39,800<small> 税込</small></div>
+          <div class="cmeta"><strong style="color:var(--rose)">全6回</strong>・約3ヶ月<br>各60分（Zoom／対面）<br>約6,600円/回</div>
+          <div class="cnote">まずはここから始めたい方に。約3ヶ月・全6回で完結します。</div>
+        </div>
+        <div class="course best">
+          <span class="cbadge">いちばんお得</span>
+          <div class="cname">6ヶ月コース（2クール）</div>
+          <div class="cyen">¥79,600<small> 税込</small></div>
+          <div class="cmeta"><strong style="color:var(--rose)">全15回</strong>・約6ヶ月<br>（全12回＋追加ワーク3本）<br>各60分（Zoom／対面）</div>
+          <div class="cnote">追加ワーク3本は6ヶ月コースの方だけ。最初から6ヶ月コースがお得です。</div>
+        </div>
+      </div>
+
+      <div class="facts"><span>💻 Zoom / 対面</span><span>👥 マンツーマン</span><span>🧭 認定ガイドが伴走</span></div>
       <div class="price-merit">
         <div class="m"><strong>終わりが見える</strong>約3ヶ月・全6回で完結するから安心</div>
         <div class="m"><strong>ずるずる続かない</strong>月契約でないから、無理なく取り組める</div>
       </div>
-      <p class="price-2nd"><strong style="color:var(--rose)">✦ 最初から「6ヶ月コース」がお得です ✦</strong><br>6ヶ月コース（2クール）… ¥79,600／<strong>全15回</strong>（全12回＋追加ワーク3本）・約6ヶ月。<br>追加ワーク3本は、6ヶ月コースの方だけが受けられます。<br>※ 継続実績に応じて料金が段階的に上がります（先着5名が最安値）。</p>
+      <p class="price-2nd">※ 継続実績に応じて料金が段階的に上がります（先着5名さまが最安値です）。</p>
       <a class="cta-btn" href="https://forms.gle/QBYESa7jGwYbt1QN6" target="_blank" rel="noopener">申し込みフォームへ進む ✦</a>
     </div>
   </section>
